@@ -146,6 +146,7 @@ export default definePlugin({
     description: "Temporarily logs deleted and edited messages.",
     authors: [Devs.rushii, Devs.Ven, Devs.AutumnVN, Devs.Nickyux, Devs.Kyuuhachi],
     dependencies: ["MessageUpdaterAPI"],
+    enabledByDefault: true,
 
     contextMenus: {
         "message": patchMessageContextMenu,
