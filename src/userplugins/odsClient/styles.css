@@ -1,0 +1,27 @@
+.ods-modal-content {
+    padding: 1em;
+}
+
+.ods-modal-header {
+    place-content: center space-between;
+}
+
+.ods-sample-modal-header h1 {
+    margin: 0;
+}
+
+.ods-sample-accessory {
+    color: var(--text-muted);
+    margin-top: 0.5em;
+    font-style: italic;
+    font-weight: 400;
+}
+
+.ods-sample-accessory svg {
+    margin-right: 0.25em;
+}
+
+
+.ods-sample-chat-button {
+    scale: 1.085;
+}
