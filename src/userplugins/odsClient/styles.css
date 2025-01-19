@@ -25,3 +25,15 @@
 .ods-sample-chat-button {
     scale: 1.085;
 }
+
+.ods-guide-content {
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+}
+
+.guide-text-div {
+    padding: 10px;
+}

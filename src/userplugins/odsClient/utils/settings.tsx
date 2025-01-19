@@ -19,6 +19,7 @@
 import { definePluginSettings } from "@api/Settings";
 import { OptionType } from "@utils/types";
 import { languagesCodes, translations } from "./translations";
+import { PluginGuideComponent } from "../components/pluginGuide";
 
 export enum Hotkeys {
     CtrlM,
@@ -28,6 +29,11 @@ export enum Hotkeys {
 }
 
 export const settings = definePluginSettings({
+    guide: {
+        type: OptionType.COMPONENT,
+        description: "",
+        component: PluginGuideComponent,
+    },
     language: {
         type: OptionType.SELECT,
         description: translations.languageSelectorDescription[languagesCodes.russian],
