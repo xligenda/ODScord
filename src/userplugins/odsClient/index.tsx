@@ -7,8 +7,7 @@ import { OdsChatBarIcon, OdsIcon } from "./components/odsIcon";
 import "./styles.css";
 import { addButton, removeButton } from "@api/MessagePopover";
 import { getCurrentChannel, getCurrentGuild } from "@utils/discord";
-import { openModal } from "@utils/modal";
-import { OdsModal } from "./components/odsModal";
+import { openODSModel } from "./components/odsModal";
 
 
 export default definePlugin({
@@ -19,6 +18,10 @@ export default definePlugin({
             id: 888016163844534372n,
             name: "xligenda",
         },
+        {
+            id: 842997230532689961n,
+            name: "akurise",
+        },
     ],
     enabledByDefault: true,
     dependencies: ["MessageAccessoriesAPI", "MessagePopoverAPI", "MessageEventsAPI", "ChatInputButtonAPI"],
@@ -27,70 +30,53 @@ export default definePlugin({
     //keybinds
     onKey(e: KeyboardEvent) {
         if (settings.store.enablePluginOnlyForModServer && getCurrentGuild()?.id != settings.store.modServerId) return;
+        if (settings.store.isModalAlreadyOpen) return;
+
         const selectedHotkey = settings.store.selectHotkeyForOpeningModMenu;
 
         let pressedRequiredKey = false;
-        if (e.ctrlKey && (selectedHotkey == Hotkeys.CtrlM || selectedHotkey == Hotkeys.CtrlQ)) pressedRequiredKey = true;
+        if (e.ctrlKey && (selectedHotkey == Hotkeys.CtrlM)) pressedRequiredKey = true;
         if (e.altKey && (selectedHotkey == Hotkeys.AltM || selectedHotkey == Hotkeys.AltQ)) pressedRequiredKey = true;
 
-        if (pressedRequiredKey && (selectedHotkey == Hotkeys.AltM || selectedHotkey == Hotkeys.CtrlM)) switch (e.key) {
-            case "m":
+        if (pressedRequiredKey && (selectedHotkey == Hotkeys.AltM || selectedHotkey == Hotkeys.CtrlM)) switch (e.key.toUpperCase()) {
             case "M":
-            case "ь":
             case "Ь":
-
-                const key = openModal((props) => (
-                    <OdsModal rootProps={props} key={key} />
-                ));
-                return;
+                return openODSModel();
         }
 
-        if (pressedRequiredKey && (selectedHotkey == Hotkeys.AltQ || selectedHotkey == Hotkeys.CtrlQ)) switch (e.key) {
+        if (pressedRequiredKey && (selectedHotkey == Hotkeys.AltQ)) switch (e.key.toUpperCase()) {
             case "Q":
-            case "q":
-            case "й":
             case "Й":
-                const key = openModal((props) => (
-                    <OdsModal rootProps={props} key={key} />
-                ));
-                return;
+                return openODSModel();
         }
     },
 
     start() {
         settings.store.selectedSampleId = 0;
         settings.store.selectedServerId = 0;
+        settings.store.isModalAlreadyOpen = false;
         document.addEventListener("keydown", this.onKey);
-        if (settings.store.showPluginButtons) {
-            addChatBarButton("ods-samples", OdsChatBarIcon);
-            addButton("ods-sample-selector", (message) => {
+        addChatBarButton("ods-samples", OdsChatBarIcon);
+        addButton("ods-sample-selector", (message) => {
 
-                const channel = getCurrentChannel();
-                if (!channel) return null;
-                if (settings.store.enablePluginOnlyForModServer && getCurrentGuild()?.id != settings.store.modServerId) return null;
+            const channel = getCurrentChannel();
+            if (!channel) return null;
+            if (settings.store.enablePluginOnlyForModServer && getCurrentGuild()?.id != settings.store.modServerId) return null;
 
-                return {
-                    label: "Модерация",
-                    icon: OdsIcon,
-                    message,
-                    channel,
-                    onClick: async () => {
-                        const key = openModal((props) => (
-                            <OdsModal rootProps={props} key={key} />
-                        ));
-                    }
-                };
-            });
-        }
-
-
-
+            return {
+                label: "Модерация",
+                icon: OdsIcon,
+                message,
+                channel,
+                onClick: async () => {
+                    openODSModel();
+                }
+            };
+        });
 
 
         this.preSend = addPreSendListener(async (data, message) => {
             if (!message.content) return;
-
-
 
             switch (true) {
                 case message.content.startsWith(settings.store.giveVerbalWarnShortcut):
@@ -101,21 +87,17 @@ export default definePlugin({
                         message.content = settings.store.verbalWarnMessage.replace("{{PING_USER}}", `<@${userId}>`).replace("{{REASON}}", reason);
                     };
                     return;
-
-                case message.content.startsWith(settings.store.sendTemplateShortcut):
-                    return;
             }
 
         });
     },
+
     stop() {
         document.removeEventListener("keydown", this.onKey);
         removePreSendListener(this.preSend);
+        removeChatBarButton("ods-samples");
+        removeButton("ods-sample-selector");
 
-        if (settings.store.showPluginButtons) {
-            removeChatBarButton("ods-samples");
-            removeButton("ods-sample-selector");
-        }
 
     },
 

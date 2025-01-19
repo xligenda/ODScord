@@ -24,8 +24,8 @@ import { PluginGuideComponent } from "../components/pluginGuide";
 export enum Hotkeys {
     CtrlM,
     AltM,
-    CtrlQ,
-    AltQ
+    AltQ,
+    None
 }
 
 export const settings = definePluginSettings({
@@ -44,11 +44,6 @@ export const settings = definePluginSettings({
             { label: "English", value: languagesCodes.english },
         ] as const,
     },
-    modServerId: {
-        type: OptionType.STRING,
-        description: translations.modServerIdSelectorDescription[languagesCodes.russian],
-        default: "684079636300300336",
-    },
     enablePluginOnlyForModServer: {
         type: OptionType.BOOLEAN,
         description: "Использовать плагин только на ОДСе",
@@ -58,10 +53,10 @@ export const settings = definePluginSettings({
         type: OptionType.SELECT,
         description: "Выберите горячие клавиши для открытия меню модерации",
         options: [
-            { label: "Ctrl + M", value: Hotkeys.CtrlM, default: true },
+            { label: "Нет", value: Hotkeys.None },
+            { label: "Ctrl + M", value: Hotkeys.CtrlM },
             { label: "Alt + M", value: Hotkeys.AltM },
-            { label: "Ctrl + Q", value: Hotkeys.CtrlQ },
-            { label: "Alt + Q", value: Hotkeys.AltQ },
+            { label: "Alt + Q", value: Hotkeys.AltQ, default: true },
         ] as const
     },
 
@@ -77,48 +72,37 @@ export const settings = definePluginSettings({
         default: "Ссылка на дискорд {{SERVER_LABLE}}({{SERVER_ID}}) - {{SERVER_LINK}}",
         placeholder: "Ссылка на дискорд {{SERVER_LABLE}}({{SERVER_ID}}) - {{SERVER_LINK}}",
     },
-    enableHotKeys: {
-        type: OptionType.BOOLEAN,
-        description: "Включить горячие клавиши",
-        default: true,
-
-    },
 
     giveVerbalWarnShortcut: {
         type: OptionType.STRING,
         description: translations.giveVerbalWarnShortcutDescription[languagesCodes.russian],
-        default: "!u",
-        placeholder: "!u"
+        default: "!",
+        placeholder: "!"
     },
-    sendTemplateShortcut: {
+
+    modServerId: {
         type: OptionType.STRING,
-        description: translations.sendTemplateShortcutDescription[languagesCodes.russian],
-        default: "!s",
-        placeholder: "!s"
+        description: "",
+        default: "684079636300300336",
+        hidden: true
     },
-    showPluginButtons: {
-        type: OptionType.BOOLEAN,
-        description: translations.showChatBarButtonsDescriptions[languagesCodes.russian],
-        default: true,
-        restartNeeded: true
-    },
-
-
-
-
-
-
     selectedSampleId: {
         type: OptionType.NUMBER,
-        description: "undefined",
+        description: "",
         default: 0,
         hidden: true,
     },
     selectedServerId: {
         type: OptionType.NUMBER,
-        description: "undefined",
+        description: "",
         default: 0,
         hidden: true,
+    },
+    isModalAlreadyOpen: {
+        type: OptionType.BOOLEAN,
+        description: "",
+        default: false,
+        hidden: false,
     }
 
 });

@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-
+import { openModal } from "@utils/modal";
 import { Margins } from "@utils/margins";
 import { closeModal, ModalCloseButton, ModalContent, ModalHeader, ModalProps, ModalRoot } from "@utils/modal";
 import { Button, Forms, SearchableSelect, Switch, useMemo, useState } from "@webpack/common";
@@ -124,6 +124,7 @@ export function OdsModal({ key, rootProps }: { key: string, rootProps: ModalProp
                 <SampleSelect />
 
                 <Button onClick={() => {
+                    settings.store.isModalAlreadyOpen = false;
                     rootProps.onClose();
                     sendSelectedSample();
                 }}>{translations.sendButtonTitle[settings.store.language || "ru"]}</Button>
@@ -136,6 +137,7 @@ export function OdsModal({ key, rootProps }: { key: string, rootProps: ModalProp
                 <DiscordSelect />
 
                 <Button onClick={() => {
+                    settings.store.isModalAlreadyOpen = false;
                     rootProps.onClose();
                     sendSelectedDiscord();
                 }}>{translations.sendButtonTitle[settings.store.language || "ru"]}</Button>
@@ -147,3 +149,11 @@ export function OdsModal({ key, rootProps }: { key: string, rootProps: ModalProp
         </ModalRoot>
     );
 }
+
+
+export const openODSModel = () => {
+    settings.store.isModalAlreadyOpen = true;
+    const key = openModal((props) => (
+        <OdsModal rootProps={props} key={key} />
+    ));
+};

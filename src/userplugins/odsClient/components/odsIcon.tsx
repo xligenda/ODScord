@@ -32,9 +32,7 @@ export function OdsIcon({ height = 24, width = 24, className }: { height?: numbe
 }
 
 export const OdsChatBarIcon: ChatBarButton = ({ isMainChat }) => {
-    const showChatBarButtons = settings.store.showChatBarButtons;
-
-    if (!isMainChat || !showChatBarButtons) return null;
+    if (!isMainChat) return null;
 
 
     const button = (
