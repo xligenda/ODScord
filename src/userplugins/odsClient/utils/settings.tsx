@@ -63,13 +63,13 @@ export const settings = definePluginSettings({
 
     verbalWarnMessage: {
         type: OptionType.STRING,
-        description: "Сообщение при выдаче устного предупреждения\n\n{{PING_USER}} - упоминание пользователя\n{{REASON}} - пункт правил",
-        default: "{{PING_USER}} Выдаю вам устное предупреждение по пункту {{REASON}}, ознакомьтесь с <#975425318984749066>",
-        placeholder: "{{PING_USER}} Выдаю вам устное предупреждение по пункту {{REASON}}, ознакомьтесь с <#975425318984749066>",
+        description: "Сообщение при выдаче устного предупреждения",
+        default: "{{PING_USER}} Прошу вас не нарушать пункт правил {{REASON}}, ознакомьтесь с <#975425318984749066>",
+        placeholder: "{{PING_USER}} Прошу вас не нарушать пункт правил {{REASON}}, ознакомьтесь с <#975425318984749066>",
     },
     discordServerLinkMessage: {
         type: OptionType.STRING,
-        description: "Сообщение при отправке ссылки на дискорд сервер\n\n{{SERVER_LABLE}} - название сервера\n{{SERVER_ID}} - номер сервера\n{{SERVER_LINK}} - сслылка на сервер",
+        description: "Сообщение при отправке ссылки на дискорд сервер",
         default: "Ссылка на дискорд {{SERVER_LABLE}}({{SERVER_ID}}) - {{SERVER_LINK}}",
         placeholder: "Ссылка на дискорд {{SERVER_LABLE}}({{SERVER_ID}}) - {{SERVER_LINK}}",
     },
