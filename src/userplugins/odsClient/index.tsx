@@ -56,8 +56,8 @@ export default definePlugin({
         settings.store.selectedServerId = 0;
         settings.store.isModalAlreadyOpen = false;
         document.addEventListener("keydown", this.onKey);
-        addChatBarButton("ods-samples", OdsChatBarIcon);
-        addButton("ods-sample-selector", (message) => {
+        addChatBarButton("ods-modal", OdsChatBarIcon);
+        addButton("ods-modal", (message) => {
 
             const channel = getCurrentChannel();
             if (!channel) return null;
@@ -79,7 +79,7 @@ export default definePlugin({
             if (!message.content) return;
 
             switch (true) {
-                case message.content.startsWith(settings.store.giveVerbalWarnShortcut):
+                case message.content.startsWith(settings.store.giveVerbalWarnShortcut) && settings.store.giveVerbalWarnShortcut != "":
                     if (settings.store.enablePluginOnlyForModServer && getCurrentGuild()?.id != settings.store.modServerId) return;
                     let userId: string = message.content.split(" ")[0].replace(settings.store.giveVerbalWarnShortcut, "");
                     let reason: string = message.content.split(" ")[1];

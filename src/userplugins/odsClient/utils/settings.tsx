@@ -19,7 +19,6 @@
 import { definePluginSettings } from "@api/Settings";
 import { OptionType } from "@utils/types";
 import { languagesCodes, translations } from "./translations";
-import { PluginGuideComponent } from "../components/pluginGuide";
 
 export enum Hotkeys {
     CtrlM,
@@ -29,11 +28,6 @@ export enum Hotkeys {
 }
 
 export const settings = definePluginSettings({
-    pluginGuide: {
-        type: OptionType.COMPONENT,
-        description: "гайд на плагин",
-        component: PluginGuideComponent
-    },
     language: {
         type: OptionType.SELECT,
         description: translations.languageSelectorDescription[languagesCodes.russian],
@@ -43,6 +37,7 @@ export const settings = definePluginSettings({
             { label: "қазақ", value: languagesCodes.kazakh },
             { label: "English", value: languagesCodes.english },
         ] as const,
+        hidden: true,
     },
     enablePluginOnlyForModServer: {
         type: OptionType.BOOLEAN,
@@ -62,13 +57,13 @@ export const settings = definePluginSettings({
 
     verbalWarnMessage: {
         type: OptionType.STRING,
-        description: translations.verbalWarnMessageDescription[languagesCodes.russian],
+        description: "Сообщение при выдаче устного предупреждения\n\n{{PING_USER}} - упоминание пользователя\n{{REASON}} - пункт правил",
         default: "{{PING_USER}} Выдаю вам устное предупреждение по пункту {{REASON}}, ознакомьтесь с <#975425318984749066>",
         placeholder: "{{PING_USER}} Выдаю вам устное предупреждение по пункту {{REASON}}, ознакомьтесь с <#975425318984749066>",
     },
     discordServerLinkMessage: {
         type: OptionType.STRING,
-        description: "Сообщение при отправке ссылки на дискорд сервер",
+        description: "Сообщение при отправке ссылки на дискорд сервер\n\n{{SERVER_LABLE}} - название сервера\n{{SERVER_ID}} - номер сервера\n{{SERVER_LINK}} - сслылка на сервер",
         default: "Ссылка на дискорд {{SERVER_LABLE}}({{SERVER_ID}}) - {{SERVER_LINK}}",
         placeholder: "Ссылка на дискорд {{SERVER_LABLE}}({{SERVER_ID}}) - {{SERVER_LINK}}",
     },
@@ -102,7 +97,13 @@ export const settings = definePluginSettings({
         type: OptionType.BOOLEAN,
         description: "",
         default: false,
-        hidden: false,
+        hidden: true,
+    },
+    userToPing: {
+        type: OptionType.STRING,
+        description: "",
+        default: "",
+        hidden: true
     }
 
 });

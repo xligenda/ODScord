@@ -43,7 +43,7 @@ export const getDiscords = (): Discord[] => {
     return config.discords;
 };
 
-export const sendSelectedDiscord = () => {
+export const sendSelectedDiscord = (): void => {
     const selectedServerId = settings.store.selectedServerId;
     const discordData = getDiscords()[selectedServerId || 0];
     const providedMessage = (settings.store.discordServerLinkMessage).replace("{{SERVER_LABLE}}", discordData.label).replace("{{SERVER_ID}}", discordData.id.toString()).replace("{{SERVER_LINK}}", discordData.link);
@@ -56,4 +56,9 @@ export const getDiscordByLable = (lable: string): number => {
         if (discord.label == lable) return discord.id;
     }
     return 0;
+};
+
+
+export const insertUserPing = (id: string): void => {
+    insertTextIntoChatInputBox(`<@${id}>`);
 };

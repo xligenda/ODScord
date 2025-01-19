@@ -18,10 +18,10 @@
 import { openModal } from "@utils/modal";
 import { Margins } from "@utils/margins";
 import { closeModal, ModalCloseButton, ModalContent, ModalHeader, ModalProps, ModalRoot } from "@utils/modal";
-import { Button, Forms, SearchableSelect, Switch, useMemo, useState } from "@webpack/common";
+import { Button, Forms, SearchableSelect, Switch, useMemo, useState, TextInput } from "@webpack/common";
 
 import { settings } from "../utils/settings";
-import { cl, Discord, getDiscordByLable, getDiscords, getSampleIdByLable, getSamples, Sample, sendSelectedDiscord, sendSelectedSample } from "../utils/utils";
+import { cl, Discord, getDiscordByLable, getDiscords, getSampleIdByLable, getSamples, insertUserPing, Sample, sendSelectedDiscord, sendSelectedSample } from "../utils/utils";
 import { translations } from "../utils/translations";
 
 function SampleSelect() {
@@ -106,7 +106,26 @@ function DiscordSelect() {
     );
 }
 
+function PingUserInput() {
+    const [currentValue, setCurrentValue] = useState(settings.store.userToPing);
 
+
+    return (
+        <section className={Margins.bottom16}>
+            <Forms.FormTitle tag="h3">
+                {"Айди пользователя для пинга"}
+            </Forms.FormTitle>
+
+            <TextInput
+                placeholder={"Введите Айди пользователя для пинга"}
+                onChange={(v) => {
+                    settings.store.userToPing = v;
+                    setCurrentValue(v);
+                }}
+            />
+        </section>
+    );
+}
 
 
 export function OdsModal({ key, rootProps }: { key: string, rootProps: ModalProps; }) {
@@ -142,9 +161,21 @@ export function OdsModal({ key, rootProps }: { key: string, rootProps: ModalProp
                     sendSelectedDiscord();
                 }}>{translations.sendButtonTitle[settings.store.language || "ru"]}</Button>
 
-                <Forms.FormDivider className={Margins.bottom8} />
+
             </ModalContent>
 
+            <Forms.FormDivider className={Margins.bottom16} />
+
+            <ModalContent className={cl("modal-content")}>
+                <PingUserInput />
+
+                <Button onClick={() => {
+                    settings.store.isModalAlreadyOpen = false;
+                    rootProps.onClose();
+                    insertUserPing(settings.store.userToPing);
+                }}
+                >{"Пингануть"}</Button>
+            </ModalContent>
 
         </ModalRoot>
     );
@@ -153,7 +184,11 @@ export function OdsModal({ key, rootProps }: { key: string, rootProps: ModalProp
 
 export const openODSModel = () => {
     settings.store.isModalAlreadyOpen = true;
+
     const key = openModal((props) => (
         <OdsModal rootProps={props} key={key} />
     ));
+    setTimeout(() => {
+        settings.store.isModalAlreadyOpen = false;
+    }, 1000 * 3);
 };
