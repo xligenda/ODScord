@@ -29,7 +29,7 @@ export enum Hotkeys {
 }
 
 export const settings = definePluginSettings({
-    settings: {
+    guide: {
         type: OptionType.COMPONENT,
         description: "",
         component: PluginGuideComponent
