@@ -35,7 +35,7 @@ export default definePlugin({
         const selectedHotkey = settings.store.selectHotkeyForOpeningModMenu;
 
         let pressedRequiredKey = false;
-        if (e.ctrlKey && (selectedHotkey == Hotkeys.CtrlM)) pressedRequiredKey = true;
+        if (e.ctrlKey && (selectedHotkey == Hotkeys.CtrlM || selectedHotkey == Hotkeys.CtrlQ)) pressedRequiredKey = true;
         if (e.altKey && (selectedHotkey == Hotkeys.AltM || selectedHotkey == Hotkeys.AltQ)) pressedRequiredKey = true;
 
         if (pressedRequiredKey && (selectedHotkey == Hotkeys.AltM || selectedHotkey == Hotkeys.CtrlM)) switch (e.key.toUpperCase()) {
@@ -44,7 +44,7 @@ export default definePlugin({
                 return openODSModel();
         }
 
-        if (pressedRequiredKey && (selectedHotkey == Hotkeys.AltQ)) switch (e.key.toUpperCase()) {
+        if (pressedRequiredKey && (selectedHotkey == Hotkeys.AltQ || selectedHotkey==Hotkeys.CtrlQ)) switch (e.key.toUpperCase()) {
             case "Q":
             case "Й":
                 return openODSModel();
@@ -97,8 +97,6 @@ export default definePlugin({
         removePreSendListener(this.preSend);
         removeChatBarButton("ods-samples");
         removeButton("ods-sample-selector");
-
-
     },
 
 });
