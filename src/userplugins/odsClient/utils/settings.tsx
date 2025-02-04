@@ -25,7 +25,8 @@ export enum Hotkeys {
     CtrlM,
     AltM,
     AltQ,
-    None
+    CtrlQ,
+    None,
 }
 
 export const settings = definePluginSettings({
@@ -56,6 +57,7 @@ export const settings = definePluginSettings({
         options: [
             { label: "Нет", value: Hotkeys.None },
             { label: "Ctrl + M", value: Hotkeys.CtrlM },
+            { label: "Ctrl + Q", value: Hotkeys.CtrlQ },
             { label: "Alt + M", value: Hotkeys.AltM },
             { label: "Alt + Q", value: Hotkeys.AltQ, default: true },
         ] as const
