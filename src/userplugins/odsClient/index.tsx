@@ -1,11 +1,11 @@
 import definePlugin from "@utils/types";
-import { addPreSendListener, removePreSendListener } from "@api/MessageEvents";
+import { addMessagePreSendListener, removeMessagePreSendListener } from "@api/MessageEvents";
 import { Hotkeys, settings } from "./utils/settings";
 import { addChatBarButton, removeChatBarButton } from "@api/ChatButtons";
 import { OdsChatBarIcon, OdsIcon } from "./components/odsIcon";
 
 import "./styles.css";
-import { addButton, removeButton } from "@api/MessagePopover";
+import { addMessagePopoverButton, removeMessagePopoverButton } from "@api/MessagePopover";
 import { getCurrentChannel, getCurrentGuild } from "@utils/discord";
 import { openODSModal } from "./components/odsModal";
 
@@ -44,7 +44,7 @@ export default definePlugin({
                 return openODSModal();
         }
 
-        if (pressedRequiredKey && (selectedHotkey == Hotkeys.AltQ || selectedHotkey==Hotkeys.CtrlQ)) switch (e.key.toUpperCase()) {
+        if (pressedRequiredKey && (selectedHotkey == Hotkeys.AltQ || selectedHotkey == Hotkeys.CtrlQ)) switch (e.key.toUpperCase()) {
             case "Q":
             case "Й":
                 return openODSModal();
@@ -57,7 +57,7 @@ export default definePlugin({
         settings.store.isModalAlreadyOpen = false;
         document.addEventListener("keydown", this.onKey);
         addChatBarButton("ods-modal", OdsChatBarIcon);
-        addButton("ods-modal", (message) => {
+        addMessagePopoverButton("ods-modal", (message) => {
 
             const channel = getCurrentChannel();
             if (!channel) return null;
@@ -75,7 +75,7 @@ export default definePlugin({
         });
 
 
-        this.preSend = addPreSendListener(async (data, message) => {
+        this.preSend = addMessagePreSendListener(async (data, message) => {
             if (!message.content) return;
 
             switch (true) {
@@ -94,9 +94,9 @@ export default definePlugin({
 
     stop() {
         document.removeEventListener("keydown", this.onKey);
-        removePreSendListener(this.preSend);
+        removeMessagePreSendListener(this.preSend);
         removeChatBarButton("ods-samples");
-        removeButton("ods-sample-selector");
+        removeMessagePopoverButton("ods-sample-selector");
     },
 
 });
