@@ -17,8 +17,8 @@
 */
 import { openModal } from "@utils/modal";
 import { Margins } from "@utils/margins";
-import { closeModal, ModalCloseButton, ModalContent, ModalHeader, ModalProps, ModalRoot } from "@utils/modal";
-import { Button, Forms, SearchableSelect, Switch, useMemo, useState, TextInput } from "@webpack/common";
+import { ModalCloseButton, ModalContent, ModalHeader, ModalProps, ModalRoot } from "@utils/modal";
+import { Button, Forms, SearchableSelect, Switch, useMemo, useState, TextInput, useEffect } from "@webpack/common";
 
 import { settings } from "../utils/settings";
 import { cl, Discord, getDiscordByLable, getDiscords, getSampleIdByLable, getSamples, insertUserPing, Sample, sendSelectedDiscord, sendSelectedSample } from "../utils/utils";
@@ -29,14 +29,13 @@ function SampleSelect() {
     const samples: Sample[] = getSamples();
     const [currentValue, setCurrentValue] = useState(samples[settings.store.selectedSampleId]);
 
-    const options = useMemo(
-        () => {
-            return samples.map(sample => ({
-                value: sample.label || "undefined",
-                label: sample.label || "undefined"
-            }));
-        }, []
-    );
+    const options = useMemo(() => {
+        return samples.map(sample => ({
+            value: sample.label || "undefined",
+            label: sample.label || "undefined",
+            key: sample.id || 0
+        }));
+    }, [samples]);
 
 
     return (
@@ -182,7 +181,7 @@ export function OdsModal({ key, rootProps }: { key: string, rootProps: ModalProp
 }
 
 
-export const openODSModel = () => {
+export const openODSModal = () => {
     settings.store.isModalAlreadyOpen = true;
 
     const key = openModal((props) => (

@@ -1,10 +1,8 @@
 
 import { classNameFactory } from "@api/Styles";
-import { findByPropsLazy } from "@webpack";
 export const cl = classNameFactory("vc-trans-");
-import { getCurrentChannel, sendMessage } from "@utils/discord";
 import { settings } from "./settings";
-import { getTheme, insertTextIntoChatInputBox, Theme } from "@utils/discord";
+import { insertTextIntoChatInputBox } from "@utils/discord";
 import config from "../config.json";
 
 

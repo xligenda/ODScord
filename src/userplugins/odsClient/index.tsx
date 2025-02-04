@@ -7,7 +7,7 @@ import { OdsChatBarIcon, OdsIcon } from "./components/odsIcon";
 import "./styles.css";
 import { addButton, removeButton } from "@api/MessagePopover";
 import { getCurrentChannel, getCurrentGuild } from "@utils/discord";
-import { openODSModel } from "./components/odsModal";
+import { openODSModal } from "./components/odsModal";
 
 
 export default definePlugin({
@@ -41,13 +41,13 @@ export default definePlugin({
         if (pressedRequiredKey && (selectedHotkey == Hotkeys.AltM || selectedHotkey == Hotkeys.CtrlM)) switch (e.key.toUpperCase()) {
             case "M":
             case "Ь":
-                return openODSModel();
+                return openODSModal();
         }
 
         if (pressedRequiredKey && (selectedHotkey == Hotkeys.AltQ)) switch (e.key.toUpperCase()) {
             case "Q":
             case "Й":
-                return openODSModel();
+                return openODSModal();
         }
     },
 
@@ -69,7 +69,7 @@ export default definePlugin({
                 message,
                 channel,
                 onClick: async () => {
-                    openODSModel();
+                    openODSModal();
                 }
             };
         });
