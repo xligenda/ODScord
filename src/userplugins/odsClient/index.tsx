@@ -1,14 +1,53 @@
 import definePlugin from "@utils/types";
-import { addPreSendListener, removePreSendListener } from "@api/MessageEvents";
+import { addMessagePreSendListener, removeMessagePreSendListener } from "@api/MessageEvents";
 import { Hotkeys, settings } from "./utils/settings";
 import { addChatBarButton, removeChatBarButton } from "@api/ChatButtons";
 import { OdsChatBarIcon, OdsIcon } from "./components/odsIcon";
+import { addProfileBadge, BadgePosition, ProfileBadge } from "@api/Badges";
 
 import "./styles.css";
-import { addButton, removeButton } from "@api/MessagePopover";
+import { addMessagePopoverButton, removeMessagePopoverButton } from "@api/MessagePopover";
 import { getCurrentChannel, getCurrentGuild } from "@utils/discord";
 import { openODSModel } from "./components/odsModal";
 
+let userBadges: { [key: string]: number[]; } = {};
+let badges: { [key: number]: { image: string; name: string; }; } = {};
+
+async function fetchBadges() {
+    try {
+        const badgesUrl = "https://badges.akurise.xyz/badges";
+        const response = await fetch(badgesUrl);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        badges = data.reduce((acc: any, badge: { id: number; image: string; name: string; }) => {
+            acc[badge.id] = { image: `https://badges.akurise.xyz${badge.image}`, name: badge.name };
+            return acc;
+        }, {});
+        console.log("[ODS]🔰 | Успешно загружены бейджи:", badges);
+    } catch (error) {
+        console.log("[ODS]🔰 | Ошибка при запросе бейджей:", error);
+    }
+}
+
+async function fetchUserBadges() {
+    try {
+        const usersUrl = "https://badges.akurise.xyz/users";
+        const response = await fetch(usersUrl);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        userBadges = data.reduce((acc: any, user: { discord_id: string; badges: number[]; }) => {
+            acc[user.discord_id] = user.badges;
+            return acc;
+        }, {});
+        console.log("[ODS]🔰 | Успешно загружены бейджи пользователей:", userBadges);
+    } catch (error) {
+        console.log("[ODS]🔰 | Ошибка при запросе бейджей пользователей:", error);
+    }
+}
 
 export default definePlugin({
     name: "ods",
@@ -44,20 +83,23 @@ export default definePlugin({
                 return openODSModel();
         }
 
-        if (pressedRequiredKey && (selectedHotkey == Hotkeys.AltQ || selectedHotkey==Hotkeys.CtrlQ)) switch (e.key.toUpperCase()) {
+        if (pressedRequiredKey && (selectedHotkey == Hotkeys.AltQ || selectedHotkey == Hotkeys.CtrlQ)) switch (e.key.toUpperCase()) {
             case "Q":
             case "Й":
                 return openODSModel();
         }
     },
 
-    start() {
+    async start() {
+        await fetchBadges();
+        await fetchUserBadges();
+
         settings.store.selectedSampleId = 0;
         settings.store.selectedServerId = 0;
         settings.store.isModalAlreadyOpen = false;
         document.addEventListener("keydown", this.onKey);
         addChatBarButton("ods-modal", OdsChatBarIcon);
-        addButton("ods-modal", (message) => {
+        addMessagePopoverButton("ods-modal", (message) => {
 
             const channel = getCurrentChannel();
             if (!channel) return null;
@@ -74,8 +116,28 @@ export default definePlugin({
             };
         });
 
+        Object.keys(badges).forEach(badgeId => {
+            const badge = badges[badgeId];
+            const profileBadge: ProfileBadge = {
+                description: badge.name,
+                image: badge.image,
+                key: `badge_${badgeId}`,
+                shouldShow: (userInfo) => {
+                    const userBadgeIds = userBadges[userInfo.userId];
+                    if (!userBadgeIds) return false;
+                    const shouldShow = userBadgeIds.includes(parseInt(badgeId));
+                    return shouldShow;
+                },
+                onClick: (event, props) => {
+                    window.open("https://ods.akurise.xyz/", "_blank");
+                },
+                position: BadgePosition.END
+            };
 
-        this.preSend = addPreSendListener(async (data, message) => {
+            addProfileBadge(profileBadge);
+        });
+
+        this.preSend = addMessagePreSendListener(async (data, message) => {
             if (!message.content) return;
 
             switch (true) {
@@ -94,9 +156,9 @@ export default definePlugin({
 
     stop() {
         document.removeEventListener("keydown", this.onKey);
-        removePreSendListener(this.preSend);
+        removeMessagePreSendListener(this.preSend);
         removeChatBarButton("ods-samples");
-        removeButton("ods-sample-selector");
+        removeMessagePopoverButton("ods-sample-selector");
     },
 
 });

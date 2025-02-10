@@ -130,6 +130,7 @@ function PingUserInput() {
 
 export function OdsModal({ key, rootProps }: { key: string, rootProps: ModalProps; }) {
 
+
     return (
         <ModalRoot {...rootProps}>
             <ModalHeader className={cl("modal-header")}>
@@ -166,20 +167,10 @@ export function OdsModal({ key, rootProps }: { key: string, rootProps: ModalProp
 
             <Forms.FormDivider className={Margins.bottom16} />
 
-            <ModalContent className={cl("modal-content")}>
-                <PingUserInput />
-
-                <Button onClick={() => {
-                    settings.store.isModalAlreadyOpen = false;
-                    rootProps.onClose();
-                    insertUserPing(settings.store.userToPing);
-                }}
-                >{"Пингануть"}</Button>
-            </ModalContent>
-
         </ModalRoot>
     );
 }
+
 
 
 export const openODSModel = () => {
