@@ -75,7 +75,12 @@ export const settings = definePluginSettings({
         default: "Ссылка на дискорд {{SERVER_LABLE}}({{SERVER_ID}}) - {{SERVER_LINK}}",
         placeholder: "Ссылка на дискорд {{SERVER_LABLE}}({{SERVER_ID}}) - {{SERVER_LINK}}",
     },
-
+    sampleFileUrl: {
+        type: OptionType.STRING,
+        description: "Ссылка на файл с шаблонами",
+        default: "https://ods.akurise.xyz/config/share/1",
+        placeholder: "https://ods.akurise.xyz/config/share/1",
+    },
     giveVerbalWarnShortcut: {
         type: OptionType.STRING,
         description: translations.giveVerbalWarnShortcutDescription[languagesCodes.russian],
@@ -113,5 +118,4 @@ export const settings = definePluginSettings({
         default: "",
         hidden: true
     }
-
 });

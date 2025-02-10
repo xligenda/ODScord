@@ -1,4 +1,3 @@
-
 import { classNameFactory } from "@api/Styles";
 import { findByPropsLazy } from "@webpack";
 export const cl = classNameFactory("vc-trans-");
@@ -6,7 +5,6 @@ import { getCurrentChannel, sendMessage } from "@utils/discord";
 import { settings } from "./settings";
 import { getTheme, insertTextIntoChatInputBox, Theme } from "@utils/discord";
 import config from "../config.json";
-
 
 export interface Sample {
     id: number,
@@ -21,13 +19,27 @@ export interface Discord {
     link: string;
 }
 
-export const getSamples = (): Sample[] => {
+let samples: Sample[] = [];
 
-    return config.samples;
+export const fetchSamples = async (): Promise<void> => {
+    try {
+        const response = await fetch(settings.store.sampleFileUrl);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        samples = await response.json();
+        console.log("[ODS]🔰 | Успешно загружены samples:", samples);
+    } catch (error) {
+        console.log("[ODS]🔰 | Ошибка при запросе samples:", error);
+    }
+};
+
+export const getSamples = (): Sample[] => {
+    return samples;
 };
 
 export const getSampleIdByLable = (lable: string): number => {
-    for (const sample of config.samples) {
+    for (const sample of samples) {
         if (sample.label == lable) return sample.id;
     }
     return 0;
@@ -36,7 +48,6 @@ export const getSampleIdByLable = (lable: string): number => {
 export const sendSelectedSample = () => {
     const selectedSampleId = settings.store.selectedSampleId;
     insertTextIntoChatInputBox(getSamples()[selectedSampleId || 0]?.value || "undefined");
-
 };
 
 export const getDiscords = (): Discord[] => {
@@ -48,7 +59,6 @@ export const sendSelectedDiscord = (): void => {
     const discordData = getDiscords()[selectedServerId || 0];
     const providedMessage = (settings.store.discordServerLinkMessage).replace("{{SERVER_LABLE}}", discordData.label).replace("{{SERVER_ID}}", discordData.id.toString()).replace("{{SERVER_LINK}}", discordData.link);
     insertTextIntoChatInputBox(providedMessage);
-
 };
 
 export const getDiscordByLable = (lable: string): number => {
@@ -57,7 +67,6 @@ export const getDiscordByLable = (lable: string): number => {
     }
     return 0;
 };
-
 
 export const insertUserPing = (id: string): void => {
     insertTextIntoChatInputBox(`<@${id}>`);

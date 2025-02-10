@@ -34,7 +34,6 @@ export function OdsIcon({ height = 24, width = 24, className }: { height?: numbe
 export const OdsChatBarIcon: ChatBarButton = ({ isMainChat }) => {
     if (!isMainChat) return null;
 
-
     const button = (
         <ChatBarButton
             tooltip={translations.openSampleSenderModalTitle[settings.store.language || "ru"]}

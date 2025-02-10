@@ -9,6 +9,7 @@ import "./styles.css";
 import { addMessagePopoverButton, removeMessagePopoverButton } from "@api/MessagePopover";
 import { getCurrentChannel, getCurrentGuild } from "@utils/discord";
 import { openODSModel } from "./components/odsModal";
+import { fetchSamples } from "./utils/utils";
 
 let userBadges: { [key: string]: number[]; } = {};
 let badges: { [key: number]: { image: string; name: string; }; } = {};
@@ -93,6 +94,7 @@ export default definePlugin({
     async start() {
         await fetchBadges();
         await fetchUserBadges();
+        await fetchSamples();
 
         settings.store.selectedSampleId = 0;
         settings.store.selectedServerId = 0;
