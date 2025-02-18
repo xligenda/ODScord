@@ -17,11 +17,11 @@
 */
 import { openModal } from "@utils/modal";
 import { Margins } from "@utils/margins";
-import { closeModal, ModalCloseButton, ModalContent, ModalHeader, ModalProps, ModalRoot } from "@utils/modal";
-import { Button, Forms, SearchableSelect, Switch, useMemo, useState, TextInput } from "@webpack/common";
+import { ModalCloseButton, ModalContent, ModalHeader, ModalProps, ModalRoot } from "@utils/modal";
+import { Button, Forms, SearchableSelect, useMemo, useState, TextInput } from "@webpack/common";
 
 import { settings } from "../utils/settings";
-import { cl, Discord, getDiscordByLable, getDiscords, getSampleIdByLable, getSamples, insertUserPing, Sample, sendSelectedDiscord, sendSelectedSample } from "../utils/utils";
+import { cl, Discord, getDiscordByLable, getDiscords, getSampleIdByLable, getSamples, Sample, sendSelectedDiscord, sendSelectedSample } from "../utils/utils";
 import { translations } from "../utils/translations";
 
 function SampleSelect() {

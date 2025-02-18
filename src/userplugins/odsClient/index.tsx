@@ -11,40 +11,11 @@ import { getCurrentChannel, getCurrentGuild, sendMessage } from "@utils/discord"
 import { openODSModel } from "./components/odsModal";
 import { fetchSamples } from "./utils/utils";
 
-import { FluxDispatcher } from "@webpack/common";
-import { Message } from "discord-types/general";
-
 let userBadges: { [key: string]: number[]; } = {};
 let badges: { [key: number]: { image: string; name: string; }; } = {};
 
-const TARGET_CHANNEL_ID = "1336682007966777355";
-const TARGET_MESSAGE_CONTENTS = [
-    "привязка", "привезать", "привязка аккаунта", "привязать аккаунт",
-    "как привязать акк", "как привезать акк", "превязка", "превязать", "превизать",
-    "превезать", "превизка", "как прикрепить аккаунт", "связать аккаунт",
-    "как связать акк", "как подключить акк", "присоеденить акк", "как сделать привязку",
-    "как привязать", "как привезать", "как привязать аккаунт", "как привезать аккаунт",
-    "как привязать аккаунт в дискорд", "как привязать аккаунт в дискорде",
-];
 
-const RESPONSE_MESSAGE = "Для того чтобы привязать игровой аккаунт к вашему дискорд-аккаунту вам потребуется зайти в официальный дискорд вашего сервера из канала <#975425330024153148>, затем вы должны перейти в канал под названием \"Привязка-аккаунта\" и привязать ваш аккаунт по инструкции в канале.";
 
-function onMessageCreate({ message }: { message: Message; }) {
-    if (message.channel_id === TARGET_CHANNEL_ID && TARGET_MESSAGE_CONTENTS.some(content => message.content.includes(content))) {
-        const guild = getCurrentGuild();
-        if (!guild) return;
-
-        sendMessage(TARGET_CHANNEL_ID, {
-            content: RESPONSE_MESSAGE
-        }, false, {
-            messageReference: {
-                message_id: message.id,
-                channel_id: TARGET_CHANNEL_ID,
-                guild_id: guild.id
-            }
-        });
-    }
-}
 
 async function fetchBadges() {
     try {
@@ -186,7 +157,6 @@ export default definePlugin({
             }
 
         });
-        FluxDispatcher.subscribe("MESSAGE_CREATE", onMessageCreate);
     },
 
     stop() {
@@ -194,7 +164,6 @@ export default definePlugin({
         removeMessagePreSendListener(this.preSend);
         removeChatBarButton("ods-samples");
         removeMessagePopoverButton("ods-sample-selector");
-        FluxDispatcher.unsubscribe("MESSAGE_CREATE", onMessageCreate);
     },
 
 });

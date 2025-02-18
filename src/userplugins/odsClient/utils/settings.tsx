@@ -20,6 +20,7 @@ import { definePluginSettings } from "@api/Settings";
 import { OptionType } from "@utils/types";
 import { languagesCodes, translations } from "./translations";
 import { PluginGuideComponent } from "../components/pluginGuide";
+import { fetchSamples } from "./utils";
 
 export enum Hotkeys {
     CtrlM,
@@ -62,6 +63,13 @@ export const settings = definePluginSettings({
             { label: "Alt + Q", value: Hotkeys.AltQ, default: true },
         ] as const
     },
+    selectedConfig: {
+        type: OptionType.STRING,
+        description: "Выбранный конфиг",
+        default: "https://ods.akurise.xyz/config/share/4",
+        placeholder: "Ссылка на конфиг",
+        onChange: fetchSamples,
+    },
 
     verbalWarnMessage: {
         type: OptionType.STRING,
@@ -75,12 +83,6 @@ export const settings = definePluginSettings({
         default: "Ссылка на дискорд {{SERVER_LABLE}}({{SERVER_ID}}) - {{SERVER_LINK}}",
         placeholder: "Ссылка на дискорд {{SERVER_LABLE}}({{SERVER_ID}}) - {{SERVER_LINK}}",
     },
-    sampleFileUrl: {
-        type: OptionType.STRING,
-        description: "Ссылка на файл с шаблонами",
-        default: "https://ods.akurise.xyz/config/share/1",
-        placeholder: "https://ods.akurise.xyz/config/share/1",
-    },
     giveVerbalWarnShortcut: {
         type: OptionType.STRING,
         description: translations.giveVerbalWarnShortcutDescription[languagesCodes.russian],
@@ -88,6 +90,9 @@ export const settings = definePluginSettings({
         placeholder: "!"
     },
 
+
+
+    // internal
     modServerId: {
         type: OptionType.STRING,
         description: "",

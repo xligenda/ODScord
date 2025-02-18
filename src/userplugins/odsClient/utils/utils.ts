@@ -1,9 +1,7 @@
 import { classNameFactory } from "@api/Styles";
-import { findByPropsLazy } from "@webpack";
 export const cl = classNameFactory("vc-trans-");
-import { getCurrentChannel, sendMessage } from "@utils/discord";
 import { settings } from "./settings";
-import { getTheme, insertTextIntoChatInputBox, Theme } from "@utils/discord";
+import { insertTextIntoChatInputBox } from "@utils/discord";
 import config from "../config.json";
 
 export interface Sample {
@@ -19,18 +17,18 @@ export interface Discord {
     link: string;
 }
 
-let samples: Sample[] = [];
+let samples: Sample[] = config.samples;
 
-export const fetchSamples = async (): Promise<void> => {
+export const fetchSamples = async (): Promise<boolean> => {
     try {
-        const response = await fetch(settings.store.sampleFileUrl);
+        const response = await fetch(settings.store.selectedConfig);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         samples = await response.json();
-        console.log("[ODS]🔰 | Успешно загружены samples:", samples);
+        return true;
     } catch (error) {
-        console.log("[ODS]🔰 | Ошибка при запросе samples:", error);
+        return false;
     }
 };
 
@@ -71,3 +69,4 @@ export const getDiscordByLable = (lable: string): number => {
 export const insertUserPing = (id: string): void => {
     insertTextIntoChatInputBox(`<@${id}>`);
 };
+

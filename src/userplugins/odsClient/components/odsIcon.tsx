@@ -31,7 +31,7 @@ export function OdsIcon({ height = 24, width = 24, className }: { height?: numbe
     );
 }
 
-export const OdsChatBarIcon: ChatBarButton = ({ isMainChat }) => {
+export const OdsChatBarIcon: any = ({ isMainChat }) => {
     if (!isMainChat) return null;
 
     const button = (
