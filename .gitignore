@@ -9,6 +9,7 @@ vencord_installer
 .DS_Store
 
 yarn.lock
+bun.lock
 package-lock.json
 
 *.log
