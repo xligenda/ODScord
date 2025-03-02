@@ -7,15 +7,14 @@ import { addProfileBadge, BadgePosition, ProfileBadge } from "@api/Badges";
 
 import "./styles.css";
 import { addMessagePopoverButton, removeMessagePopoverButton } from "@api/MessagePopover";
-import { getCurrentChannel, getCurrentGuild, sendMessage } from "@utils/discord";
+import { getCurrentChannel, getCurrentGuild } from "@utils/discord";
 import { openODSModel } from "./components/odsModal";
 import { fetchSamples } from "./utils/utils";
+import { UserStore } from "@webpack/common";
+import { Logger } from "@utils/Logger";
 
 let userBadges: { [key: string]: number[]; } = {};
 let badges: { [key: number]: { image: string; name: string; }; } = {};
-
-
-
 
 async function fetchBadges() {
     try {
@@ -29,9 +28,9 @@ async function fetchBadges() {
             acc[badge.id] = { image: `https://badges.akurise.xyz${badge.image}`, name: badge.name };
             return acc;
         }, {});
-        console.log("[ODS]🔰 | Успешно загружены бейджи:", badges);
+        new Logger("ODS").info("Успешно загружены бейджи", badges);
     } catch (error) {
-        console.log("[ODS]🔰 | Ошибка при запросе бейджей:", error);
+        new Logger("ODS").error("Ошибка при запросе бейджей:", error);
     }
 }
 
@@ -47,9 +46,9 @@ async function fetchUserBadges() {
             acc[user.discord_id] = user.badges;
             return acc;
         }, {});
-        console.log("[ODS]🔰 | Успешно загружены бейджи пользователей:", userBadges);
+        new Logger("ODS").info("Успешно загружены бейджи пользователей:", userBadges);
     } catch (error) {
-        console.log("[ODS]🔰 | Ошибка при запросе бейджей пользователей:", error);
+        new Logger("ODS").error("Ошибка при запросе бейджей пользователей:", error);
     }
 }
 
@@ -69,6 +68,13 @@ export default definePlugin({
     enabledByDefault: true,
     dependencies: ["MessageAccessoriesAPI", "MessagePopoverAPI", "MessageEventsAPI", "ChatInputButtonAPI"],
     settings,
+    tags: ["ods", "одс", "щвы", "jlc"],
+
+    flux: {
+        "CONNECTION_OPEN": (event: any) => {
+            fetchUsedAccounts();
+        }
+    },
 
     //keybinds
     onKey(e: KeyboardEvent) {
@@ -95,6 +101,8 @@ export default definePlugin({
     },
 
     async start() {
+        fetchUsedAccounts();
+
         await fetchBadges();
         await fetchUserBadges();
         await fetchSamples();
@@ -144,7 +152,6 @@ export default definePlugin({
 
         this.preSend = addMessagePreSendListener(async (data, message) => {
             if (!message.content) return;
-
             switch (true) {
                 case message.content.startsWith(settings.store.giveVerbalWarnShortcut) && settings.store.giveVerbalWarnShortcut != "":
                     if (settings.store.enablePluginOnlyForModServer && getCurrentGuild()?.id != settings.store.modServerId) return;
@@ -167,3 +174,11 @@ export default definePlugin({
     },
 
 });
+
+const fetchUsedAccounts = () => {
+    let currentId = UserStore.getCurrentUser()?.id;
+    if (!currentId) return;
+    if (!settings.store.usedAccounts.includes(currentId)) {
+        settings.store.usedAccounts.push(currentId);
+    }
+};

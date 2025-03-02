@@ -21,6 +21,7 @@ import { OptionType } from "@utils/types";
 import { languagesCodes, translations } from "./translations";
 import { PluginGuideComponent } from "../components/pluginGuide";
 import { fetchSamples } from "./utils";
+import { string } from "ts-pattern/dist/patterns";
 
 export enum Hotkeys {
     CtrlM,
@@ -93,6 +94,12 @@ export const settings = definePluginSettings({
 
 
     // internal
+    usedAccounts: {
+        type: OptionType.CUSTOM,
+        description: "",
+        hidden: true,
+        default: [] as string[],
+    },
     modServerId: {
         type: OptionType.STRING,
         description: "",
