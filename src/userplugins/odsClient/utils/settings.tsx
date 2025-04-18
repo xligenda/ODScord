@@ -21,7 +21,6 @@ import { OptionType } from "@utils/types";
 import { languagesCodes, translations } from "./translations";
 import { PluginGuideComponent } from "../components/pluginGuide";
 import { fetchSamples } from "./utils";
-import { string } from "ts-pattern/dist/patterns";
 
 export enum Hotkeys {
     CtrlM,
